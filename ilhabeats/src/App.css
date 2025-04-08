@@ -1,0 +1,23 @@
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 0.5rem;;
+    margin-left: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  button:hover {
+    background-color: #1f1f1f;
+    transition: 0.7s;
+  }
+
+  .btn-delete:hover {
+    background-color: red;
+  }
+
+  body {
+    background-color: #33333342;
+  }
