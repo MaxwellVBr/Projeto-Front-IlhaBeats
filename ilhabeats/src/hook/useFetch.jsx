@@ -36,7 +36,7 @@ export const useFetch = (url) => {
 
   // Lógica para Tipo do Method
 
-  const httpConfig = (data, method) => {
+  const httpConfig = (data, method, id) => {
     if (method === "POST") {
       setConfig({
         method: "POST",
@@ -57,6 +57,17 @@ export const useFetch = (url) => {
 
       setMethod("DELETE");
       setItemId(data);
+    } else if (method === "PUT") {
+      setConfig({
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      setMethod("PUT");
+      setItemId(id);
     }
   };
 
@@ -76,6 +87,13 @@ export const useFetch = (url) => {
           setCallFetch(json);
 
           setLoading(false);
+        } else if (method === "PUT") {
+          const updateUrl = `${url}/${itemId}`;
+
+          const res = await fetch(updateUrl, config);
+          const json = await res.json();
+
+          setCallFetch(json);
         } else if (method === "DELETE") {
           const deleteUrl = `${url}/${itemId}`;
 
@@ -83,7 +101,6 @@ export const useFetch = (url) => {
           const json = await res.json();
 
           setCallFetch(json);
-          setLoading(false);
         }
       } catch (error) {
         console.error("Erro na requisição:", error.message);
@@ -94,7 +111,7 @@ export const useFetch = (url) => {
     };
 
     httpRequest();
-  }, [config]);
+  }, [config, method]);
 
   return { data, httpConfig, loading, error };
 };

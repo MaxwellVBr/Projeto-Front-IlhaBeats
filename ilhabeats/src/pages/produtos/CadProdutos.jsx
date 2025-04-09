@@ -13,17 +13,22 @@ const CadProdutos = ({ produto, onClose }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const produto = {
+        const produtoSelecionado  = {
             nome,
             descricao,
             preco
         }
 
-        httpConfig(produto, "POST");
+        if (produto && produto.idProduto) {
+            httpConfig(produtoSelecionado, "PUT", produto.idProduto);
+          } else {
+            httpConfig(produtoSelecionado, "POST");
+          }
 
         setNome("");
         setDescricao("");
         setPreco("");
+        
     }
 
   return (
