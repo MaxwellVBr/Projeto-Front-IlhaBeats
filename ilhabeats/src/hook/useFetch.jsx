@@ -10,35 +10,17 @@ export const useFetch = (url) => {
   const [callFetch, setCallFetch] = useState(false);
 
   const [itemId, setItemId] = useState(null);
+  const [buscarNome, setBuscarNome] = useState(null);
 
-  // 🔍 Função para buscar produto por nome
- 
-  
- const getProdutoPorNome = async (nome) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const res = await fetch(`${url}/buscar?nome=${nome}`);
-      const json = await res.json();
-
-      setData(json);
-    } catch (error) {
-      console.error("Erro ao buscar:", error.message);
-      setError("Erro ao buscar produto por nome.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  // GET dos produtos
+  // GET dos produtos Total ou por Nome
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
 
       try {
-        const res = await fetch(url);
+        const endpoint = buscarNome ? `${url}/buscar?nome=${buscarNome}` : url;
 
+        const res = await fetch(endpoint);
         const json = await res.json();
 
         setData(json);
@@ -52,10 +34,10 @@ export const useFetch = (url) => {
     };
 
     fetchData();
-  }, [url, callFetch]);
+  }, [url, callFetch, buscarNome]);
+
 
   // Lógica para Tipo do Method
-
   const httpConfig = (data, method, id) => {
     if (method === "POST") {
       setConfig({
@@ -91,10 +73,10 @@ export const useFetch = (url) => {
     }
   };
 
+  
   // Lógica de Requisição para o Method
   useEffect(() => {
     const httpRequest = async () => {
-
       setLoading(true);
 
       try {
@@ -133,5 +115,5 @@ export const useFetch = (url) => {
     httpRequest();
   }, [config, method]);
 
-  return { data, httpConfig, loading, error, getProdutoPorNome };
+  return { data, httpConfig, loading, error, setBuscarNome };
 };

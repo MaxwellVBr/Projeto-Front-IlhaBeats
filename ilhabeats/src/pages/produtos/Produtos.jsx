@@ -15,7 +15,7 @@ import CadProdutos from './CadProdutos';
 const Produtos = () => {
 
     const url = import.meta.env.VITE_API + "produtos";
-    const { data, httpConfig, loading, error, getProdutoPorNome } = useFetch(url);
+    const { data, httpConfig, loading, error, setBuscarNome } = useFetch(url);
 
     const navigate = useNavigate();
 
@@ -42,7 +42,8 @@ const Produtos = () => {
 
     //Buscar Produtos por nome
     const handleSubmitBuscar =  () => {
-        getProdutoPorNome(buscarProduto)
+      setBuscarNome(buscarProduto)
+      console.log(buscarProduto)
     }
     
   return (
