@@ -11,6 +11,26 @@ export const useFetch = (url) => {
 
   const [itemId, setItemId] = useState(null);
 
+  // 🔍 Função para buscar produto por nome
+ 
+  
+ const getProdutoPorNome = async (nome) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch(`${url}/buscar?nome=${nome}`);
+      const json = await res.json();
+
+      setData(json);
+    } catch (error) {
+      console.error("Erro ao buscar:", error.message);
+      setError("Erro ao buscar produto por nome.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   // GET dos produtos
   useEffect(() => {
     const fetchData = async () => {
@@ -113,5 +133,5 @@ export const useFetch = (url) => {
     httpRequest();
   }, [config, method]);
 
-  return { data, httpConfig, loading, error };
+  return { data, httpConfig, loading, error, getProdutoPorNome };
 };

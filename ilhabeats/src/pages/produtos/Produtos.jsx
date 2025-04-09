@@ -15,12 +15,14 @@ import CadProdutos from './CadProdutos';
 const Produtos = () => {
 
     const url = import.meta.env.VITE_API + "produtos";
-    const { data, httpConfig, loading, error } = useFetch(url);
+    const { data, httpConfig, loading, error, getProdutoPorNome } = useFetch(url);
 
     const navigate = useNavigate();
 
     const [mostrarModal, setMostrarModal] = useState(false);
     const [produtoSelecionado, setProdutoSelecionado] = useState(null);
+
+    const [buscarProduto, setBuscarProduto] = useState("");
   
     // Controle de aparição do MODAL
     const editarProduto = (produto) => {
@@ -35,12 +37,24 @@ const Produtos = () => {
     // DELETAR Produto
     const deletarProduto = (idProduto) => {
       httpConfig(idProduto, "DELETE")
-      
+
+    }
+
+    //Buscar Produtos por nome
+    const handleSubmitBuscar =  () => {
+        getProdutoPorNome(buscarProduto)
     }
     
   return (
     <div className="produtos-container">
+      <div>
         <h2>Produtos</h2>
+        <label>
+          Pesquisar:
+          <input type="text" value={buscarProduto} name='buscar' onChange={(e) => setBuscarProduto(e.target.value)} />
+        </label>
+        <button onClick={handleSubmitBuscar}>Pesquisar</button>       
+      </div>
         <button onClick={() => {navigate('/cadprodutos')}}>Novo Produto</button>
         {loading && <p>Carregando dados...</p>}
         {error && <p>{error}</p>}
