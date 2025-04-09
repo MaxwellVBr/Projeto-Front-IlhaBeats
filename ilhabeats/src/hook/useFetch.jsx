@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 export const useFetch = (url) => {
-
   const [data, setData] = useState();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -15,24 +14,27 @@ export const useFetch = (url) => {
   // GET dos produtos
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
+
       try {
-        setLoading(true);
-        
         const res = await fetch(url);
 
         const json = await res.json();
 
         setData(json);
-        
-      } catch (err) {
-        setError(err.message);
-      } finally {
+
         setLoading(false);
+      } catch (error) {
+        console.error(error.message);
+
+        setError("Houve um erro ao carregar os dados!");
       }
     };
 
     fetchData();
   }, [url, callFetch]);
+
+  // Lógica para Tipo do Method
 
   const httpConfig = (data, method) => {
     if (method === "POST") {
@@ -58,39 +60,41 @@ export const useFetch = (url) => {
     }
   };
 
+  // Lógica de Requisição para o Method
   useEffect(() => {
     const httpRequest = async () => {
-      if (!config) return;
 
       setLoading(true);
 
-      let res;
       try {
         if (method === "POST") {
-          res = await fetch(url, config);
+          let fetchOptions = [url, config];
+
+          const res = await fetch(...fetchOptions);
+          const json = await res.json();
+
+          setCallFetch(json);
+
+          setLoading(false);
         } else if (method === "DELETE") {
           const deleteUrl = `${url}/${itemId}`;
-          res = await fetch(deleteUrl, config);
+
+          const res = await fetch(deleteUrl, config);
+          const json = await res.json();
+
+          setCallFetch(json);
+          setLoading(false);
         }
-
-        // Verifica se a resposta tem corpo JSON
-        const contentType = res.headers.get("content-type");
-        let json = null;
-
-        if (contentType && contentType.includes("application/json")) {
-          json = await res.json();
-        }
-
-        setCallFetch(json || true); // só para forçar reload
-      } catch (err) {
-        setError(err.message);
+      } catch (error) {
+        console.error("Erro na requisição:", error.message);
+        setError("Algo deu errado na requisição.");
       } finally {
         setLoading(false);
       }
     };
 
     httpRequest();
-  }, [config, method, url, itemId]);
+  }, [config]);
 
-  return { data, httpConfig, loading, error }; // <-- importante!
+  return { data, httpConfig, loading, error };
 };

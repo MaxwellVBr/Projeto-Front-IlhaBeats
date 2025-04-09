@@ -15,7 +15,7 @@ import CadProdutos from './CadProdutos';
 const Produtos = () => {
 
     const url = import.meta.env.VITE_API + "produtos";
-    const { data, loading, error } = useFetch(url);
+    const { data, httpConfig, loading, error } = useFetch(url);
 
     const navigate = useNavigate();
 
@@ -33,8 +33,9 @@ const Produtos = () => {
     };
 
     // DELETAR Produto
-    const deleteProduto = (idProduto) => {
-
+    const deletarProduto = (idProduto) => {
+      httpConfig(idProduto, "DELETE")
+      
     }
     
   return (
@@ -51,7 +52,7 @@ const Produtos = () => {
                     {produtos.descricao} - 
                     R$ {produtos.preco}
                     <button onClick={() => editarProduto(produtos)}>Editar</button>
-                    <button className='btn-delete'>Deletar</button>
+                    <button onClick={() => deletarProduto(produtos.idProduto)} className='btn-delete'>Deletar</button>
                 </li>
             ))}
         </ul>
