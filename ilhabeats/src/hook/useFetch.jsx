@@ -39,32 +39,36 @@ export const useFetch = (url) => {
 
   // Lógica para Tipo do Method
   const httpConfig = (data, method, id) => {
+    const token = localStorage.getItem("token");
+
+     const commonHeaders = {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${token}`,
+    };
+
+
     if (method === "POST") {
       setConfig({
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: commonHeaders,
         body: JSON.stringify(data),
       });
 
       setMethod("POST");
+
     } else if (method === "DELETE") {
       setConfig({
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: commonHeaders,
       });
 
       setMethod("DELETE");
       setItemId(data);
+
     } else if (method === "PUT") {
       setConfig({
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: commonHeaders,
         body: JSON.stringify(data),
       });
 
@@ -85,6 +89,11 @@ export const useFetch = (url) => {
 
           const res = await fetch(...fetchOptions);
           const json = await res.json();
+
+          // Verifica se a URL é de login
+          if (url.includes("login") && json.token) {
+          localStorage.setItem("token", json.token); // Armazena o token JWT
+        }
 
           setCallFetch(json);
 
